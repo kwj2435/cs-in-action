@@ -9,3 +9,4 @@ IOC는 Inversion Of Controller의 약자로 제어의 역전이라는 의미를 
 사용하는 방식을 의미한다.  
 Spring에서 DI는 Spring Container에 생성되어 있는 Bean을 필요로 하는 클래스에 주입하는 방식으로 구현되어 있다.  
 
+#### DI의 3가지 방식
