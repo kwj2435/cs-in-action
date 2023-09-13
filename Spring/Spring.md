@@ -85,6 +85,15 @@ DispatcherServlet의 역할
 4. Spring Security와 통합하여 보안 및 인증 처리
 5. 다국어및 국제화 관련 작업 지원 
 
+#### DispatcherServlet과 FrontController의 관계
+DispatcherServlet은 Spring MVC에서 FrontController 패턴의 구현체이다.  
+Front Controller 패턴은 웹 애플리케이션의 모든 클라이언트 요청을 중앙 집중적으로 처리하는 디자인 패턴이다.  
+Dispatcher Servlet은 클라이언트의 모든 HTTP 요청을 전달 받으며 요청을 분석하고 적절한 핸들러에게 요청을 전달한다.  
+요청을 전달 받은 핸들러는 요청을 처리하고 결과를 Dispatcher Servlet에 반환한다.  
+결과적으로 Dispatcher Servlet은 Front Controller 패턴을 구현하여 애플리케이션의 중앙 집중적인 요청을 담당하고,  
+개발자는 컨트롤러와 뷰로직에 집중하여 웹 애플리케이션을 개발할 수 있게 된다.  
+이것이 Dispatcher Servlet과 Front Controller 패턴의 관계이다.  
+
 #### 클라이언트의 요청부터 Spring Controller에 도달하기 까지의 과정
 1. Client -> Web Server(톰캣)로 Request 보냄
 2. Apache(웹서버)은 (Tomcat)was로 요청 전달
