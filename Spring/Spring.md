@@ -27,7 +27,7 @@ Spring MVC를 사용할 때 불편함은 다음과 같다.
 3. yml, properties 기반의 디펜던시 설정과 Auto Configuration을 제공한다.
 
 #### Servlet이란?
-서블릿이란 동적 웹 페이지를 만들 때 사용 되는 자바 기반의 프로그래밍 기술이다.  
+서블릿이란 동적 웹 페이지를 만들 때 사용 되는 자바 기반의 프로그래밍 기술이다.  (웹 서버 프로그래밍을 위한 사양을 갖춘 자바 규격)
 서블릿은 웹 요청과 응답의 흐름을 간단한 메서드 호출만으로 체계적으로 다룰 수 있도록 제공해준다.
 서블릿은 interface로 명시되어 있는데, 스프링에서는 DispatcherServlet이 해당 인터페이스를 구현하여 사용하고 있다.  
   
@@ -43,11 +43,11 @@ Spring MVC를 사용할 때 불편함은 다음과 같다.
 8. HttpServletRequest, HttpServletResponse 객체 소멸
 
 #### Servlet Container
-서블릿을 관리하기 위해서는 서블릿 컨테이너가 필요하다.  
-서블릿 컨테이너는 서블릿 객체를 생성하고, 초기화하며 호출하고 종료하는 일련의 생명주기를 관리한다.  
+- 서블릿을 관리하기 위해서는 서블릿 컨테이너가 필요하며, 서블릿 컨테이너는 서블릿 객체를 생성하고, 초기화하며 호출하고 종료하는 일련의 생명주기를 관리한다.  
 이렇게 생성된 서블릿은 웹서버와의 통신을 위해 소켓을 생성하고, 특정 포트에 리스닝하고 스트림을 생성하는 등의 복잡한 일들을 처리한다.
 또한 멀티스레드에 대한 지원과 관리를 담당한다.  
-우리가 많이 사용하는 톰캣이 바로 Servlet Container 역할을 수행한다.  
+
+- 우리가 많이 사용하는 톰캣이 바로 Servlet Container 역할을 수행한다.  
 Servlet Container는 들어온 요청에 대해 처리가 가능한 Servlet을 찾고 해당 요청을 서블릿과 매핑시켜주는데,  
 Servlet Container가 여러 매핑 정보를 가진 여러 Servlet을 생성하고 관리할 수도 있지만,  
 스프링의 경우 Servlet Container에 Dispatcher Servlet을 등록하여 둔후 요청들을 DispatcherServlet으로 보내어 해당 부분에서 처리하도록 하고있다.
@@ -72,8 +72,19 @@ Servlet을 전달받은 DispatcherServlet은 어떤 컨트롤러를 호출할지
 DispatcherServlet은 서블릿 컨테이너에서 동작하는 Spring Framework의 일부로서, 클라이언트의 요청을 서블릿을 통해 처리한다.
 [Tomcat은 WAS이며 동적 웹 애플리케이션을 관리하는 역할을 한다. Spring은 WAS 위에서 동작하는 웹 애플리케이션 서버이다.]
 
+#### Tomcat에 대한 심화 이해
+Tomcat은 4.x 버전 부터 Catalina(Servlet Container), Coyote(HTTP 커넥터) 및 Jasper(JSP)엔진과 함께 출시되었다.  
+아파치 톰캣이 웹서버와 was의 기능을 한다고 표현할때, was는 곧 servlet container를 의미한다.  
+Servlet Container는 말그대로 Servlet을 담아두는 컨테이너 역할을 하며, 들어온 요청에 따라 정의된 서블릿과 매핑시켜준다.  
+Servlet Container는 들어온 Http 요청에 대해 HttpRequest, HttpResponse 객체를 만들게 되는데,
+HttpServletRequest는 Http 요청 정보를 편리하게 사용할 수 있도록 도와주는 객체로, 클라이언트가 보내는 HTTP 요청 메시지를 parsing하여, 그 내용물을 담고 있다.    
+HttpServletResponse는 Http 요청에 대한 응답 메시지를 정의하며 응답메시지를 정의하는게 있어 필요한 편의기능을 제공한다.  
+이렇게 생성된 두 객체는 Servlet Container가 Servlet을 호출할때 파라미터로 전달하여 사용되게 된다.  
+
+ServletContainer로 사용할 수 있는 건 Tomcat외에도 Jetty, Undertow, Netty가 있다.
+
 #### DispatcherServlet
-DispatcherServlet은 Java EE의 Servlet을 래핑한 클래스이다.  
+DispatcherServlet은 Java EE의 Servlet을 래핑한 클래스이다.  (Spring에서 사용하는 서블릿 구현체)
 Servlet Container로 부터 전달받은 Request를 올바른 Controller에 매핑하는 것부터, View, Model 처리등을 지원해준다.  
 DispatcherServlet이 등장하기전에는 web.xml을 통해 모든 서블릿을 URL 매핑을 위해 web.xml에 등록해두어야 했지만,  
 dispatcherServlet이 해당 애플리케이션으로 들어오는 모든 요청을 핸들링하는 편한 방식으로 바뀌게 되었다.  
@@ -100,5 +111,7 @@ Dispatcher Servlet은 클라이언트의 모든 HTTP 요청을 전달 받으며 
 3. Servlet Container(was)는 Request에 대한 HttpServletReuqest,HttpServletResponse 두 객체를 생성한다.
 4. 요청한 URL에 해당하는 Servlet을 찾고, 없을 경우 Servlet을 생성한다.(DispatcherServlet은 옵션에 따라 미리 생성할수도, 나중에 생성할수도 있다.)  
 5. DispatcherServlet에서 HandlerMapping 과정을 통해 해당하는 Controller로 요청을 전달한다.
+
+#### 톰캣의 스레드풀
 
 
